@@ -4,6 +4,7 @@
   "description": "Battleship for \"The Odin Project\"",
   "main": "index.js",
   "scripts": {
+    "test": "jest --watchAll",
     "build": "webpack",
     "dev": "webpack serve"
   },
