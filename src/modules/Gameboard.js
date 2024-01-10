@@ -55,6 +55,10 @@ class GameBoard {
       return false;
     }
   }
+
+  allSunk() {
+    return this.ships.every((ship) => ship.isSunk);
+  }
 }
 
 module.exports = GameBoard;
