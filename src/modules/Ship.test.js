@@ -27,7 +27,7 @@ describe("Test if the ship object is initialized properly", () => {
 });
 
 describe("Test if the hit method on the Ship object class is working", () => {
-  test("See if the number of hits on the ship Object", () => {
+  test("See if the number of hits on the ship Object is working", () => {
     const exampleShip = new Ship(4);
     exampleShip.hit();
     expect(exampleShip.numberOfHits).toBe(1);
