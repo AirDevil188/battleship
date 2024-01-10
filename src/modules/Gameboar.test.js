@@ -184,7 +184,6 @@ describe("Test placement of ships on the game board", () => {
       testBoard.receiveAttack(testCarrierShip, [2, 3]);
       testBoard.receiveAttack(testCarrierShip, [3, 3]);
       testBoard.receiveAttack(testCarrierShip, [4, 3]);
-      testBoard.allSunk();
 
       expect(testBoard.allSunk()).toBeTruthy();
     });
