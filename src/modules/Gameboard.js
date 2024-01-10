@@ -1,11 +1,10 @@
-const Ship = require("./Ship");
-
 class GameBoard {
   constructor() {
     this.grid = Array(10)
       .fill(null)
       .map(() => Array(10).fill(null));
     this.ships = [];
+    this.missedHits = [];
   }
 
   legalPlacement(ship, legalCoordinate, direction) {
@@ -19,7 +18,7 @@ class GameBoard {
     }
     if (direction === "vertical") {
       const maxShipLengthY = legalCoordinate[0] + ship.length;
-      if (legalCoordinate[1] < 0 || legalCoordinate[1] > 9 || maxShipLengthY > 9) {
+      if (legalCoordinate[1] < 0 || legalCoordinate[1] > 9 || maxShipLengthY > 10) {
         throw Error("This move is out of bounds");
       } else {
         return;
@@ -44,6 +43,17 @@ class GameBoard {
       this.ships.push(ship);
     }
     return this.grid;
+  }
+
+  receiveAttack(ship, coordinate) {
+    if (this.grid[coordinate[0]][coordinate[1]]) {
+      ship.hit();
+      ship.isItSunk();
+      return true;
+    } else {
+      this.missedHits.push([coordinate[0], coordinate[1]]);
+      return false;
+    }
   }
 }
 

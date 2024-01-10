@@ -15,7 +15,7 @@ describe("Test the creation of the game board", () => {
 });
 
 describe("Test placement of ships on the game board", () => {
-  test("Test placement of horizontal and vertical placment on the board", () => {
+  test("Test placement of horizontal and vertical placement on the board", () => {
     let testBoard = new GameBoard();
     let testCarrier = new Ship(5);
     let testBattleship = new Ship(4);
@@ -145,7 +145,25 @@ describe("Test placement of ships on the game board", () => {
     const testBoard = new GameBoard();
     const testCarrier = new Ship(5);
     expect(() => {
-      testBoard.placeShip(testCarrier, [5, 5], "vertical");
+      testBoard.placeShip(testCarrier, [6, 5], "vertical");
     }).toThrow();
+  });
+
+  describe("Test the receive attack method", () => {
+    test("Test if the ship is hit", () => {
+      const testBoard = new GameBoard();
+      const testDestroyer = new Ship(2);
+      testBoard.placeShip(testDestroyer, [5, 5], "horizontal");
+      expect(testBoard.receiveAttack(testDestroyer, [5, 5])).toBeTruthy();
+      expect(testBoard.receiveAttack(testDestroyer, [5, 6])).toBeTruthy();
+    });
+
+    test("Test if hit is missed", () => {
+      const testBoard = new GameBoard();
+      const testBattleship = new Ship(4);
+      testBoard.placeShip(testBattleship, [5, 3], "vertical");
+
+      expect(testBoard.receiveAttack(testBattleship, [9, 3], "vertical")).toBeFalsy();
+    });
   });
 });
