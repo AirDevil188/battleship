@@ -46,12 +46,14 @@ class GameBoard {
   }
 
   receiveAttack(ship, coordinate) {
-    if (this.grid[coordinate[0]][coordinate[1]]) {
+    let xCoordinate = coordinate[0];
+    let yCoordinate = coordinate[1];
+    if (this.grid[xCoordinate][yCoordinate]) {
       ship.hit();
       ship.isItSunk();
       return true;
     } else {
-      this.missedHits.push([coordinate[0], coordinate[1]]);
+      this.missedHits.push([xCoordinate, yCoordinate]);
       return false;
     }
   }
