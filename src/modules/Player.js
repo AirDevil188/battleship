@@ -7,6 +7,8 @@ class Player {
     this.board = new GameBoard();
   }
 
+  static playersArr = [];
+
   attack(ship, coordinate) {
     return this.board.receiveAttack(ship, coordinate);
   }
@@ -17,8 +19,10 @@ class Player {
 }
 
 class CPU extends Player {
-  constructor() {
+  constructor(name, active) {
     super();
+    this.name = name;
+    this.active = active;
     this.attackedCells = new Set();
   }
   static randomCoordinate = function getRandomNumber() {
@@ -32,32 +36,46 @@ class CPU extends Player {
   };
 
   randomShipPlace(ship) {
-    const occupiedCoordinates = [];
-    const checkForNullCoordinates = occupiedCoordinates.every((element) => element === null);
-
+    let occupiedCells = [];
     let randomCoordinateX = CPU.randomCoordinate();
     let randomCoordinateY = CPU.randomCoordinate();
-    let randomDirection = CPU.randomDirection();
+    let randomOrientation = CPU.randomDirection();
+    let allNull = (arr) => arr.every((coordinate) => coordinate === null);
 
-    try {
-      if (randomDirection === "vertical") {
-        for (let i = 0; i < ship.length; i++) {
-          occupiedCoordinates.push(this.board.grid[randomCoordinateY + i][randomCoordinateX]);
-        }
+    while (randomCoordinateX + ship.length >= 10 || randomCoordinateY + ship.length >= 10) {
+      randomCoordinateX = CPU.randomCoordinate();
+      randomCoordinateY = CPU.randomCoordinate();
+    }
 
-        if (checkForNullCoordinates === true) {
-          this.placeShip(ship, [randomCoordinateX, randomCoordinateY], randomDirection);
-        } else this.randomShipPlace(ship);
+    for (let i = 0; i < ship.length; i++) {
+      if (randomOrientation === "horizontal") {
+        occupiedCells.push(this.board.grid[randomCoordinateY][randomCoordinateX + i]);
+        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX + 1]);
+        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX - 1]);
       } else {
-        for (let i = 0; i < ship.length; i++) {
-          occupiedCoordinates.push(this.board.grid[randomCoordinateY][randomCoordinateX + i]);
-        }
-        if (checkForNullCoordinates === true) {
-          this.placeShip(ship, [randomCoordinateX, randomCoordinateY], randomDirection);
-        } else this.randomShipPlace(ship);
+        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX]);
+        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX + 1]);
+        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX - 1]);
       }
-    } catch (err) {
-      this.randomShipPlace(ship);
+    }
+
+    if (randomOrientation === "horizontal") {
+      if (!randomCoordinateX + ship.length < 0 || !randomCoordinateX - 1 < 0) {
+        occupiedCells.push(this.board.grid[randomCoordinateY][randomCoordinateX + ship.length]);
+        occupiedCells.push(this.board.grid[randomCoordinateY][randomCoordinateX - 1]);
+      }
+    } else if (randomOrientation === "vertical") {
+      if (!randomCoordinateY + ship.length < 0 || !randomCoordinateY - 1 < 0) {
+        occupiedCells.push(this.board.grid[randomCoordinateY - 1][randomCoordinateX]);
+
+        occupiedCells.push(this.board.grid[randomCoordinateY + ship.length][randomCoordinateX]);
+      }
+    }
+
+    if (allNull(occupiedCells)) {
+      this.placeShip(ship, [randomCoordinateY, randomCoordinateX], randomOrientation);
+    } else {
+      this.randomShipPlace(ship, [randomCoordinateY, randomCoordinateX], randomOrientation);
     }
   }
 
