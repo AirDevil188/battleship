@@ -1,4 +1,5 @@
 const GameBoard = require("./Gameboard");
+const Ship = require("./Ship");
 
 class Player {
   constructor(name, active) {
@@ -8,6 +9,22 @@ class Player {
   }
 
   static playersArr = [];
+
+  createShips(arr) {
+    const carrier = new Ship(5);
+    const battleship = new Ship(4);
+    const cruiser = new Ship(3);
+    const submarine = new Ship(3);
+    const destroyer = new Ship(2);
+
+    arr.push(carrier);
+    arr.push(battleship);
+    arr.push(cruiser);
+    arr.push(submarine);
+    arr.push(destroyer);
+
+    return arr;
+  }
 
   attack(ship, coordinate) {
     return this.board.receiveAttack(ship, coordinate);
@@ -25,26 +42,23 @@ class CPU extends Player {
     this.active = active;
     this.attackedCells = new Set();
   }
-  static randomCoordinate = function getRandomNumber() {
-    return Math.floor(Math.random() * 9);
-  };
 
-  static randomDirection = function getRandomPosition() {
+  getRandomPosition() {
     const directionArr = ["horizontal", "vertical"];
 
     return directionArr[Math.floor(Math.random() * directionArr.length)];
-  };
+  }
 
   randomShipPlace(ship) {
     let occupiedCells = [];
-    let randomCoordinateX = CPU.randomCoordinate();
-    let randomCoordinateY = CPU.randomCoordinate();
-    let randomOrientation = CPU.randomDirection();
+    let randomCoordinateX = Math.floor(Math.floor(Math.random() * 10));
+    let randomCoordinateY = Math.floor(Math.floor(Math.random() * 10));
+    let randomOrientation = this.getRandomPosition();
     let allNull = (arr) => arr.every((coordinate) => coordinate === null);
 
     while (randomCoordinateX + ship.length >= 10 || randomCoordinateY + ship.length >= 10) {
-      randomCoordinateX = CPU.randomCoordinate();
-      randomCoordinateY = CPU.randomCoordinate();
+      randomCoordinateX = Math.floor(Math.floor(Math.random() * 10));
+      randomCoordinateY = Math.floor(Math.floor(Math.random() * 10));
     }
 
     for (let i = 0; i < ship.length; i++) {
@@ -80,14 +94,14 @@ class CPU extends Player {
   }
 
   randomAttack(ship) {
-    let randomCoordinateX = CPU.randomCoordinate();
-    let randomCoordinateY = CPU.randomCoordinate();
-    let attackCellString = `${randomCoordinateX}, ${randomCoordinateY}`;
+    let randomCoordinateX = Math.floor(Math.floor(Math.random() * 10));
+    let randomCoordinateY = Math.floor(Math.floor(Math.random() * 10));
 
-    if (!this.attackedCells.has(attackCellString)) {
-      this.attackedCells.add(attackCellString);
-      this.attack(ship, [randomCoordinateX, randomCoordinateY]);
-    } else this.randomAttack(ship);
+    while (this.attackedCells.has(`${randomCoordinateX}, ${randomCoordinateY}`)) {
+      return this.randomAttack(ship);
+    }
+    this.attackedCells.add(`${randomCoordinateX}, ${randomCoordinateY}`);
+    return this.attack(ship, [randomCoordinateX, randomCoordinateY]);
   }
 }
 
