@@ -4,7 +4,6 @@ class GameBoard {
       .fill(null)
       .map(() => Array(10).fill(null));
     this.ships = [];
-    this.missedHits = [];
   }
 
   legalPlacement(ship, legalCoordinate, direction) {
@@ -53,7 +52,6 @@ class GameBoard {
       ship.isItSunk();
       return true;
     } else {
-      this.missedHits.push([xCoordinate, yCoordinate]);
       return false;
     }
   }
