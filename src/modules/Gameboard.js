@@ -59,6 +59,10 @@ class GameBoard {
   allSunk() {
     return this.ships.every((ship) => ship.isSunk);
   }
+
+  getShips() {
+    return this.ships;
+  }
 }
 
 module.exports = GameBoard;

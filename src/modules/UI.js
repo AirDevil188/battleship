@@ -1,16 +1,22 @@
 const toHtml = require("../util/toHtml");
 
 export default class UI {
-  static startingScreen = toHtml(`<div class="starting-screen-container">
+  static startingScreen = toHtml(`    <dialog open class="modal" id="modal">
 <h3>PLAY AGAINST:</h3>
 <button class = "play-against-button player-button" value = "Player">PLAYER</button>
 <button class = "play-against-button computer-button" value = "Computer">COMPUTER</button>
-</div>`);
-  static createPlayerScreen = toHtml(`<div class="player-creation-container">
+</dialog>`);
+  static startingModalAgainstComputer = toHtml(`
+  <dialog open class = "modal" id = "modal">
+  <div class="player-creation-container">
 <h3>ENTER NAME OF THE PLAYER :</h3>
-<input type="text" id = "input-player-name"  />
-<button class="player-create-button">PLAY</button>
-</div>`);
+<form>
+<input type="text" id = "input-player-name" required  />
+<button class="player-create-button" type="submit">PLAY</button>
+</div>
+</form>
+</dialog>
+`);
 
   static createBoards = (board, type) => {
     const gameBoard = document.createElement("div");
