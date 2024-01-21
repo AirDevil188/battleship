@@ -16,34 +16,54 @@ export function gameLoop() {
       switch (e.target.getAttribute("value")) {
         case "Computer":
           console.log("computer");
-          appendStartingScreen(e.target.getAttribute("value"));
-          playAgainstCPU();
+          appendStartingScreen(e.target.value);
+          playTheGame();
           break;
         case "Player":
-          console.log(Player);
+          appendStartingScreen(e.target.value);
+          playTheGame();
+          break;
       }
     });
   });
 }
 
 export function createPlayers() {
-  const playerNameInput = document.querySelector("#input-player-name");
+  if (document.querySelector("h3").textContent === "ENTER NAME OF THE PLAYER :") {
+    const playerNameInput = document.querySelector("#input-player-name");
 
-  const humanPlayer = new Player(`${playerNameInput.value}`, true);
-  const CPUPlayer = new CPU("CPU", false);
+    const humanPlayer = new Player(`${playerNameInput.value}`, true);
+    const CPUPlayer = new CPU("CPU", false);
 
-  Player.playersArr.push(humanPlayer, CPUPlayer);
+    Player.playersArr.push(humanPlayer, CPUPlayer);
+  } else {
+    const playerNameInputPlayerOne = document.querySelector("#input-player-name");
+    const playerNameInputPlayerTwo = document.querySelector("#input-player-two-name");
+
+    const humanPlayerOne = new Player(`${playerNameInputPlayerOne.value}`, true);
+    const humanPlayerTwo = new Player(`${playerNameInputPlayerTwo.value}`, false);
+
+    Player.playersArr.push(humanPlayerOne, humanPlayerTwo);
+  }
 }
 
 export function initializeGameBoards() {
-  const humanPlayer = Player.playersArr[0];
-  console.log(Player.playersArr);
-  const CPUPlayer = Player.playersArr[1];
+  if (document.querySelector(".modal").classList.contains("cpu-game")) {
+    const humanPlayer = Player.playersArr[0];
+    const CPUPlayer = Player.playersArr[1];
 
-  UI.createBoards(humanPlayer.board.grid, "humanBoard");
-  UI.createBoards(CPUPlayer.board.grid, "CPUBoard");
-  placeShipsOnBoard([]);
-  addBoardEventListeners();
+    UI.createBoards(humanPlayer.board.grid, "humanBoard");
+    UI.createBoards(CPUPlayer.board.grid, "CPUBoard");
+    placeShipsOnBoard([]);
+    addBoardEventListeners();
+  } else {
+    const humanPlayerOne = Player.playersArr[0];
+    const humanPlayerTwo = Player.playersArr[1];
+
+    UI.createBoards(humanPlayerOne.board.grid, "humanBoard");
+    UI.createBoards(humanPlayerTwo.board.grid, "humanBoard-two");
+    addBoardEventListeners();
+  }
 }
 
 export function placeShipsOnBoard(arr) {
@@ -82,10 +102,18 @@ export function checkForWinner() {
   }
 }
 
-export function playAgainstCPU() {
-  document.querySelector("form").addEventListener("submit", () => {
+export function playTheGame() {
+  document.querySelector("form").addEventListener("submit", (e) => {
+    e.preventDefault();
     createPlayers();
     initializeGameBoards();
+  });
+}
+
+export function playAgainstAnotherPlayer() {
+  document.querySelector("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    createPlayers();
   });
 }
 

@@ -7,11 +7,24 @@ export default class UI {
 <button class = "play-against-button computer-button" value = "Computer">COMPUTER</button>
 </dialog>`);
   static startingModalAgainstComputer = toHtml(`
-  <dialog open class = "modal" id = "modal">
+  <dialog open class = "modal cpu-game" id = "modal">
   <div class="player-creation-container">
 <h3>ENTER NAME OF THE PLAYER :</h3>
 <form>
 <input type="text" id = "input-player-name" required  />
+<button class="player-create-button" type="submit">PLAY</button>
+</div>
+</form>
+</dialog>
+`);
+
+  static startingModalAgainstAnotherPlayer = toHtml(`
+<dialog open class = "modal p-vs-p-game" id = "modal">
+<div class="player-creation-container">
+<h3>ENTER THE NAME OF THE PLAYERS :</h3>
+<form>
+<input type="text" id = "input-player-name" required  />
+<input type="text" id = "input-player-two-name" required  />
 <button class="player-create-button" type="submit">PLAY</button>
 </div>
 </form>
@@ -36,6 +49,9 @@ export default class UI {
           if (type === "humanBoard") {
             row.classList.add("Human");
             gameBoard.classList.add("human-player-board");
+          } else if (type === "humanBoard-two") {
+            row.classList.add("Human-Two");
+            gameBoard.classList.add("human-player-two-board");
           } else {
             row.classList.add("Computer");
             gameBoard.classList.add("computer-player-board");

@@ -10,6 +10,8 @@ export function appendStartingScreen(value) {
     console.log("run");
     document.querySelector("body").appendChild(UI.startingModalAgainstComputer);
   } else {
+    console.log("human");
+    document.querySelector("body").appendChild(UI.startingModalAgainstAnotherPlayer);
   }
 }
 export function getBoardValue(player, column, row) {
