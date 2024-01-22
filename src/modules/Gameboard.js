@@ -9,7 +9,7 @@ class GameBoard {
   legalPlacement(ship, legalCoordinate, direction) {
     if (direction === "horizontal") {
       const maxShipLengthX = legalCoordinate[1] + ship.length;
-      if (legalCoordinate[0] < 0 || legalCoordinate[0] > 9 || maxShipLengthX > 10) {
+      if (legalCoordinate[0] < 0 || legalCoordinate[0] > 10 || maxShipLengthX > 10) {
         throw Error("This move is out of bounds");
       } else {
         return;
@@ -17,7 +17,7 @@ class GameBoard {
     }
     if (direction === "vertical") {
       const maxShipLengthY = legalCoordinate[0] + ship.length;
-      if (legalCoordinate[1] < 0 || legalCoordinate[1] > 9 || maxShipLengthY > 10) {
+      if (legalCoordinate[1] < 0 || legalCoordinate[1] > 10 || maxShipLengthY > 10) {
         throw Error("This move is out of bounds");
       } else {
         return;
