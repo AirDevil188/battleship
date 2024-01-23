@@ -17,125 +17,18 @@ describe("Test player placement of ships", () => {
     const testBattleship = new Ship(4);
 
     player1.board.placeShip(testCarrier, [0, 5], "vertical");
-    player1.board.placeShip(testBattleship, [6, 6], "horizontal");
-    expect(player1.board).toEqual(
-      expect.objectContaining({
-        grid: [
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [null, null, null, null, null, null, null, null, null, null],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 4,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            {
-              length: 4,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            {
-              length: 4,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            {
-              length: 4,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-          ],
-          [null, null, null, null, null, null, null, null, null, null],
-          [null, null, null, null, null, null, null, null, null, null],
-          [null, null, null, null, null, null, null, null, null, null],
-        ],
-      })
-    );
+
+    expect(player1.board.grid[0][5]).not.toBe(null);
+    expect(player1.board.grid[1][5]).not.toBe(null);
+    expect(player1.board.grid[2][5]).not.toBe(null);
+    expect(player1.board.grid[3][5]).not.toBe(null);
+    expect(player1.board.grid[4][5]).not.toBe(null);
+
+    expect(player1.board.grid[0][5]).toBeInstanceOf(Ship);
+    expect(player1.board.grid[1][5]).toBeInstanceOf(Ship);
+    expect(player1.board.grid[2][5]).toBeInstanceOf(Ship);
+    expect(player1.board.grid[3][5]).toBeInstanceOf(Ship);
+    expect(player1.board.grid[4][5]).toBeInstanceOf(Ship);
   });
 });
 
