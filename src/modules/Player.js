@@ -54,42 +54,16 @@ class CPU extends Player {
     let randomCoordinateX = Math.floor(Math.floor(Math.random() * 10));
     let randomCoordinateY = Math.floor(Math.floor(Math.random() * 10));
     let randomOrientation = this.getRandomPosition();
-    let allNull = (arr) => arr.every((coordinate) => coordinate === null);
 
     while (randomCoordinateX + ship.length >= 10 || randomCoordinateY + ship.length >= 10) {
       randomCoordinateX = Math.floor(Math.floor(Math.random() * 10));
       randomCoordinateY = Math.floor(Math.floor(Math.random() * 10));
     }
-
-    for (let i = 0; i < ship.length; i++) {
-      if (randomOrientation === "horizontal") {
-        occupiedCells.push(this.board.grid[randomCoordinateY][randomCoordinateX + i]);
-        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX + 1]);
-        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX - 1]);
-      } else {
-        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX]);
-        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX + 1]);
-        occupiedCells.push(this.board.grid[randomCoordinateY + i][randomCoordinateX - 1]);
-      }
-    }
-
-    if (randomOrientation === "horizontal") {
-      if (!randomCoordinateX + ship.length < 0 || !randomCoordinateX - 1 < 0) {
-        occupiedCells.push(this.board.grid[randomCoordinateY][randomCoordinateX + ship.length]);
-        occupiedCells.push(this.board.grid[randomCoordinateY][randomCoordinateX - 1]);
-      }
-    } else if (randomOrientation === "vertical") {
-      if (!randomCoordinateY + ship.length < 0 || !randomCoordinateY - 1 < 0) {
-        occupiedCells.push(this.board.grid[randomCoordinateY - 1][randomCoordinateX]);
-
-        occupiedCells.push(this.board.grid[randomCoordinateY + ship.length][randomCoordinateX]);
-      }
-    }
-
-    if (allNull(occupiedCells)) {
+    try {
       this.placeShip(ship, [randomCoordinateY, randomCoordinateX], randomOrientation);
-    } else {
-      this.randomShipPlace(ship, [randomCoordinateY, randomCoordinateX], randomOrientation);
+    } catch (e) {
+      console.error(e);
+      this.randomShipPlace(ship);
     }
   }
 
