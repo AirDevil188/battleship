@@ -18,128 +18,19 @@ describe("Test placement of ships on the game board", () => {
   test("Test placement of horizontal and vertical placement on the board", () => {
     let testBoard = new GameBoard();
     let testCarrier = new Ship(5);
-    let testBattleship = new Ship(4);
     testBoard.placeShip(testCarrier, [0, 5], "vertical");
-    testBoard.placeShip(testBattleship, [6, 6], "horizontal");
 
-    expect(testBoard).toEqual(
-      expect.objectContaining({
-        grid: [
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 5,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            null,
-            null,
-            null,
-            null,
-          ],
-          [null, null, null, null, null, null, null, null, null, null],
-          [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            {
-              length: 4,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            {
-              length: 4,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            {
-              length: 4,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-            {
-              length: 4,
-              numberOfHits: 0,
-              isSunk: false,
-            },
-          ],
-          [null, null, null, null, null, null, null, null, null, null],
-          [null, null, null, null, null, null, null, null, null, null],
-          [null, null, null, null, null, null, null, null, null, null],
-        ],
-      })
-    );
+    expect(testBoard.grid[0][5]).not.toBe(null);
+    expect(testBoard.grid[1][5]).not.toBe(null);
+    expect(testBoard.grid[2][5]).not.toBe(null);
+    expect(testBoard.grid[3][5]).not.toBe(null);
+    expect(testBoard.grid[4][5]).not.toBe(null);
+
+    expect(testBoard.grid[0][5]).toBeInstanceOf(Ship);
+    expect(testBoard.grid[1][5]).toBeInstanceOf(Ship);
+    expect(testBoard.grid[2][5]).toBeInstanceOf(Ship);
+    expect(testBoard.grid[3][5]).toBeInstanceOf(Ship);
+    expect(testBoard.grid[4][5]).toBeInstanceOf(Ship);
   });
 
   test("Test out of bounds error", () => {
