@@ -10,21 +10,10 @@ class Player {
 
   static playersArr = [];
 
-  createShips(arr) {
-    const carrier = new Ship(5);
-    const battleship = new Ship(4);
-    const cruiser = new Ship(3);
-    const submarine = new Ship(3);
-    const destroyer = new Ship(2);
-
-    arr.push(carrier);
-    arr.push(battleship);
-    arr.push(cruiser);
-    arr.push(submarine);
-    arr.push(destroyer);
-
-    return arr;
-  }
+  static createPlayerShip = (length) => {
+    let playerShip = new Ship(length);
+    return playerShip;
+  };
 
   attack(ship, coordinate) {
     return this.board.receiveAttack(ship, coordinate);
@@ -43,6 +32,22 @@ class CPU extends Player {
     this.attackedCells = new Set();
   }
 
+  createShips(arr) {
+    const carrier = new Ship(5);
+    const battleship = new Ship(4);
+    const cruiser = new Ship(3);
+    const submarine = new Ship(3);
+    const destroyer = new Ship(2);
+
+    arr.push(carrier);
+    arr.push(battleship);
+    arr.push(cruiser);
+    arr.push(submarine);
+    arr.push(destroyer);
+
+    return arr;
+  }
+
   getRandomPosition() {
     const directionArr = ["horizontal", "vertical"];
 
@@ -50,7 +55,6 @@ class CPU extends Player {
   }
 
   randomShipPlace(ship) {
-    let occupiedCells = [];
     let randomCoordinateX = Math.floor(Math.floor(Math.random() * 10));
     let randomCoordinateY = Math.floor(Math.floor(Math.random() * 10));
     let randomOrientation = this.getRandomPosition();
