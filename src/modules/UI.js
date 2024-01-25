@@ -1,11 +1,6 @@
 const toHtml = require("../util/toHtml");
 
 export default class UI {
-  static startingScreen = toHtml(`    <dialog open class="modal" id="modal">
-<h3>PLAY AGAINST:</h3>
-<button class = "play-against-button player-button" value = "Player">PLAYER</button>
-<button class = "play-against-button computer-button" value = "Computer">COMPUTER</button>
-</dialog>`);
   static startingModalAgainstComputer = toHtml(`
   <dialog open class = "modal cpu-game" id = "modal">
   <div class="player-creation-container">
@@ -18,18 +13,37 @@ export default class UI {
 </dialog>
 `);
 
-  static startingModalAgainstAnotherPlayer = toHtml(`
-<dialog open class = "modal p-vs-p-game" id = "modal">
-<div class="player-creation-container">
-<h3>ENTER THE NAME OF THE PLAYERS :</h3>
-<form>
-<input type="text" id = "input-player-name" required  />
-<input type="text" id = "input-player-two-name" required  />
-<button class="player-create-button" type="submit">PLAY</button>
-</div>
-</form>
-</dialog>
-`);
+  static placableShips = () => {
+    return toHtml(`<div id = ship-container>
+  <div class = "ship horizontal" id = "carrier" draggable="true">
+  <div class = "part"></div>
+  <div class = "part"></div>
+  <div class = "part"></div>
+  <div class = "part"></div>
+  <div class = "part"></div>
+  </div>
+  <div class = "ship horizontal" id = "battleship" draggable="true">
+  <div class = "part"></div>
+  <div class = "part"></div>
+  <div class = "part"></div>
+  <div class = "part"></div>
+  </div>
+  <div class = "ship horizontal" id = "submarine" draggable="true"> 
+  <div class = "part"></div>
+  <div class = "part"></div>
+  <div class = "part"></div>
+  </div>
+  <div class = "ship horizontal" id = "cruiser" draggable="true">
+  <div class = "part"></div>
+  <div class = "part"></div>
+  <div class = "part"></div>
+  </div>
+  <div class = "ship horizontal" id = "destroyer" draggable="true"> 
+  <div class = "part"></div>
+  <div class = "part"></div>
+  </div>
+  </div>`);
+  };
 
   static createBoards = (board, type) => {
     const gameBoard = document.createElement("div");
@@ -49,9 +63,6 @@ export default class UI {
           if (type === "humanBoard") {
             row.classList.add("Human");
             gameBoard.classList.add("human-player-board");
-          } else if (type === "humanBoard-two") {
-            row.classList.add("Human-Two");
-            gameBoard.classList.add("human-player-two-board");
           } else {
             row.classList.add("Computer");
             gameBoard.classList.add("computer-player-board");
@@ -59,5 +70,22 @@ export default class UI {
         });
       }
     });
+  };
+  static playAndResetButtons = () => {
+    const buttonsContainer = document.createElement("div");
+    const playGameButton = document.createElement("button");
+    const resetBoardButton = document.createElement("button");
+
+    buttonsContainer.classList.add("buttons-container");
+    playGameButton.classList.add("play-game-button");
+    resetBoardButton.classList.add("reset-board-button");
+
+    playGameButton.textContent = "Play The Game";
+    resetBoardButton.textContent = "Reset Board";
+    document.querySelector(".main-content").appendChild(buttonsContainer);
+    buttonsContainer.appendChild(playGameButton);
+    buttonsContainer.appendChild(resetBoardButton);
+
+    return buttonsContainer;
   };
 }
