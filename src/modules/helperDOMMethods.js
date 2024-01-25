@@ -1,25 +1,37 @@
 import Ship from "./Ship";
 import UI from "./UI";
 import { Player } from "./Player";
-import dragula from "dragula";
 import { computerTurn, playerTurn, switchTurn } from "./gameLoop";
+import { dragEnter, dragLeave, dragOver, dragStart, drop } from "../util/dragDrop";
+import GameBoard from "./Gameboard";
 
-export function appendStartingScreen(value) {
-  document.querySelector(".modal").remove();
-  if (value === "Computer") {
-    console.log("run");
-    document.querySelector("body").appendChild(UI.startingModalAgainstComputer);
-  } else {
-    console.log("human");
-    document.querySelector("body").appendChild(UI.startingModalAgainstAnotherPlayer);
-  }
-}
 export function getBoardValue(player, column, row) {
   return player.board.grid[column][row];
 }
 export function changeColorCell(e, cell) {
   if (cell instanceof Ship) e.style.background = "red";
   else e.style.background = "#4e4d4d";
+}
+
+export function renderPlayerShipsOnTheGameBoard() {
+  const ships = document.querySelectorAll(".ship");
+
+  ships.forEach((ship) => {
+    for (let i = 0; i < ship.dataset.length; i++) {
+      if (ship.dataset.orientation === "horizontal") {
+        const cellNode = document.querySelector(
+          `[data-row = "${Number(ship.dataset.row) + i}"][data-column = "${Number(ship.dataset.column)}"]`
+        );
+        cellNode.style.backgroundColor = "orange";
+      } else {
+        const cellNode = document.querySelector(
+          `[data-row = "${Number(ship.dataset.row)}"][data-column = "${Number(ship.dataset.column) + i}"]`
+        );
+        cellNode.style.backgroundColor = "orange";
+      }
+    }
+    ship.remove();
+  });
 }
 
 export function renderComputerMove() {
@@ -38,28 +50,82 @@ export function renderComputerMove() {
 }
 
 export function addBoardEventListeners() {
-  document.querySelector("dialog").remove();
-  console.log("running");
   const ComputerBoardCells = document.querySelectorAll(".Computer");
   ComputerBoardCells.forEach((cell) => {
     cell.addEventListener("click", (e) => {
-      console.log(playerTurn(Player.playersArr[1], e.target.dataset.column, e.target.dataset.row, e));
-      console.log(e.target);
-      removeBoardEventListeners(e);
+      playerTurn(Player.playersArr[1], e.target.dataset.column, e.target.dataset.row, e);
+      removeEventListeners(e);
       computerTurn();
       switchTurn();
     });
   });
 }
 
-export function removeBoardEventListeners(e) {
+export function removeEventListeners(e) {
   let newSubmit = e.target.cloneNode(true);
   e.target.parentNode.replaceChild(newSubmit, e.target);
 }
 
 export function dragDrop() {
   const shipContainer = document.querySelector("#ship-container");
-  const container = document.querySelector("#drop-target");
-  console.log(shipContainer);
-  dragula([shipContainer, container]);
+
+  shipContainer.addEventListener("dragstart", dragStart);
+
+  let ship = document.querySelector(".gameboard");
+  ship.addEventListener("dragenter", dragEnter);
+  ship.addEventListener("dragover", dragOver);
+  ship.addEventListener("dragleave", dragLeave);
+  ship.addEventListener("drop", drop);
+}
+
+export function assignDataAttributesToShips() {
+  const carrier = document.querySelector("#carrier");
+  const battleship = document.querySelector("#battleship");
+  const submarine = document.querySelector("#submarine");
+  const cruiser = document.querySelector("#cruiser");
+  const destroyer = document.querySelector("#destroyer");
+
+  carrier.setAttribute("data-length", 5);
+  carrier.setAttribute("data-orientation", "horizontal");
+  battleship.setAttribute("data-length", 4);
+  battleship.setAttribute("data-orientation", "horizontal");
+  submarine.setAttribute("data-length", 3);
+  submarine.setAttribute("data-orientation", "horizontal");
+  cruiser.setAttribute("data-length", 3);
+  cruiser.setAttribute("data-orientation", "horizontal");
+  destroyer.setAttribute("data-length", 2);
+  destroyer.setAttribute("data-orientation", "horizontal");
+}
+
+export function rotateShip() {
+  const ships = document.querySelectorAll(".horizontal");
+
+  ships.forEach((ship) => {
+    ship.addEventListener("click", () => {
+      if (ship.classList.contains("horizontal")) {
+        ship.classList.toggle("vertical");
+        ship.classList.remove("horizontal");
+        ship.dataset.orientation = "vertical";
+      } else {
+        ship.classList.toggle("horizontal");
+        ship.classList.remove("vertical");
+        ship.dataset.orientation = "horizontal";
+      }
+    });
+  });
+}
+
+export function resetBoardShipPlacement() {
+  document.querySelector(".reset-board-button").addEventListener("click", () => {
+    const placedShips = document.querySelectorAll(".dropped");
+    placedShips.forEach((ship) => {
+      ship.remove();
+      ship.style.position = "";
+    });
+    document.querySelector("#ship-container").remove();
+    document.querySelector(".main-content").appendChild(UI.placableShips());
+    Player.playersArr[0].board = new GameBoard();
+    assignDataAttributesToShips();
+    dragDrop();
+  });
 }
