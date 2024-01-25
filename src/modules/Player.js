@@ -66,7 +66,6 @@ class CPU extends Player {
     try {
       this.placeShip(ship, [randomCoordinateY, randomCoordinateX], randomOrientation);
     } catch (e) {
-      console.error(e);
       this.randomShipPlace(ship);
     }
   }
