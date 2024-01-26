@@ -1,7 +1,7 @@
 import Ship from "./Ship";
 import UI from "./UI";
 import { Player } from "./Player";
-import { computerTurn, playerTurn, switchTurn } from "./gameLoop";
+import { computerTurn, playerTurn } from "./gameLoop";
 import { dragEnter, dragLeave, dragOver, dragStart, drop } from "../util/dragDrop";
 import GameBoard from "./Gameboard";
 
@@ -9,7 +9,7 @@ export function getBoardValue(player, column, row) {
   return player.board.grid[column][row];
 }
 export function changeColorCell(e, cell) {
-  if (cell instanceof Ship) e.style.background = "red";
+  if (cell instanceof Ship) e.style.background = "#c6527a";
   else e.style.background = "#4e4d4d";
 }
 
@@ -22,12 +22,14 @@ export function renderPlayerShipsOnTheGameBoard() {
         const cellNode = document.querySelector(
           `[data-row = "${Number(ship.dataset.row) + i}"][data-column = "${Number(ship.dataset.column)}"]`
         );
-        cellNode.style.backgroundColor = "orange";
+        cellNode.style.backgroundColor = "#000";
+        cellNode.style.borderColor = "#fff";
       } else {
         const cellNode = document.querySelector(
           `[data-row = "${Number(ship.dataset.row)}"][data-column = "${Number(ship.dataset.column) + i}"]`
         );
-        cellNode.style.backgroundColor = "orange";
+        cellNode.style.backgroundColor = "#000";
+        cellNode.style.borderColor = "#fff";
       }
     }
     ship.remove();
@@ -50,13 +52,18 @@ export function renderComputerMove() {
 }
 
 export function addBoardEventListeners() {
+  const humanPlayer = Player.playersArr[0];
+  const CPUPlayer = Player.playersArr[1];
   const ComputerBoardCells = document.querySelectorAll(".Computer");
   ComputerBoardCells.forEach((cell) => {
     cell.addEventListener("click", (e) => {
-      playerTurn(Player.playersArr[1], e.target.dataset.column, e.target.dataset.row, e);
-      removeEventListeners(e);
-      computerTurn();
-      switchTurn();
+      if (humanPlayer.board.allSunk() || CPUPlayer.board.allSunk()) {
+        return;
+      } else {
+        playerTurn(Player.playersArr[1], e.target.dataset.column, e.target.dataset.row, e);
+        removeEventListeners(e);
+        computerTurn();
+      }
     });
   });
 }
@@ -123,9 +130,24 @@ export function resetBoardShipPlacement() {
       ship.style.position = "";
     });
     document.querySelector("#ship-container").remove();
-    document.querySelector(".main-content").appendChild(UI.placableShips());
+    document
+      .querySelector(".right-container")
+      .insertBefore(UI.placableShips(), document.querySelector(".buttons-container"));
+    document.querySelector(".play-game-button").style.display = "none";
     Player.playersArr[0].board = new GameBoard();
     assignDataAttributesToShips();
     dragDrop();
+    rotateShip();
   });
+}
+
+export function showPlayGameButton() {
+  if (document.querySelector("#ship-container").children.length === 0) {
+    document.querySelector(".play-game-button").style.display = "block";
+  }
+}
+
+export function deleteButtonsAndContainers() {
+  document.querySelector(".left-container").remove();
+  document.querySelector(".right-container").remove();
 }
