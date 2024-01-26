@@ -3,6 +3,7 @@ import {
   addBoardEventListeners,
   assignDataAttributesToShips,
   changeColorCell,
+  deleteButtonsAndContainers,
   dragDrop,
   getBoardValue,
   renderComputerMove,
@@ -14,8 +15,9 @@ import {
 import UI from "./UI";
 
 export function gameLoop() {
-  const playAgainstButtons = document.querySelector(".player-create-button");
-  playAgainstButtons.addEventListener("click", () => {
+  const form = document.querySelector("form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
     startTheGame();
   });
 }
@@ -65,9 +67,14 @@ export function checkForWinner() {
   const player2 = Player.playersArr[1];
 
   if (player1.board.allSunk()) {
-    console.log("Computer has won!");
+    document.querySelector(".main-content").appendChild(UI.winnerScreen(player2.name));
+    UI.createPlayAgainButton();
+
+    return document.querySelector(".play-again-button").addEventListener("click", () => location.reload());
   } else if (player2.board.allSunk()) {
-    console.log("You Won!");
+    document.querySelector(".main-content").appendChild(UI.winnerScreen(player1.name));
+    UI.createPlayAgainButton();
+    return document.querySelector(".play-again-button").addEventListener("click", () => location.reload());
   }
 }
 
@@ -76,8 +83,10 @@ export function startTheGame() {
   document.querySelector(".modal").remove();
   const humanPlayer = Player.playersArr[0];
   UI.createBoards(humanPlayer.board.grid, "humanBoard");
+  document.querySelector(".left-container").appendChild(UI.dragAndDropInfo);
+  document.querySelector(".main-content").appendChild(UI.rightContainerCreation());
+  document.querySelector(".right-container").appendChild(UI.placableShips());
   UI.playAndResetButtons();
-  document.querySelector(".main-content").appendChild(UI.placableShips());
   assignDataAttributesToShips();
   rotateShip();
   dragDrop();
@@ -86,29 +95,29 @@ export function startTheGame() {
 }
 
 export function playerTurn(player, column, row, e) {
+  checkForWinner();
   const boardCellValue = getBoardValue(player, column, row);
   player.attack(boardCellValue, [column, row]);
   changeColorCell(e.target, boardCellValue);
-  checkForWinner();
 }
 
 export function computerTurn() {
+  checkForWinner();
   const humanPlayer = Player.playersArr[0];
   const CPUPlayer = Player.playersArr[1];
 
-  console.log(humanPlayer.board.getShips());
   const humanPlayerShips = humanPlayer.board.getShips();
 
   const pickRandomShip = humanPlayerShips[Math.floor(Math.random() * humanPlayerShips.length)];
   CPUPlayer.randomAttack(pickRandomShip);
   renderComputerMove();
-  checkForWinner();
 }
 
 export function playAgainstCPU() {
   document.querySelector(".play-game-button").addEventListener("click", () => {
     document.querySelector("#ship-container").remove();
     initializeComputerGameBoard();
+    deleteButtonsAndContainers();
     renderPlayerShipsOnTheGameBoard();
   });
 }
